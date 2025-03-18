@@ -37,8 +37,10 @@ namespace scially {
         void mergeMin(const osg::Vec3f& min);
 
         double geometricError() const {
-            double maxErr = std::max({north - south, maxHeight - minHeight, east - west});
-            return maxErr / 20.0;
+            double diffX = lonToMeter(this->east - this->west, (this->south + this->north) / 2);
+            double diffY = latToMeter(this->north - this->south);
+            double result = std::sqrt(diffX * diffX + diffY * diffY);
+            return result;
         }
         
          BoundingVolumeRegion merge(BoundingVolumeRegion bounding) const {

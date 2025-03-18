@@ -5,7 +5,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_DEBUG_POSTFIX "d")
 set(CMAKE_RELEASE_POSTFIX "")
-
+set(CMAKE_PREFIX_PATH "/opt/homebrew/opt/qt@5/lib/cmake")
 if(MSVC)
 	add_definitions(-DNOMINMAX)
 	set(EXECUTABLE_OUTPUT_PATH  "${PROJECT_SOURCE_DIR}/binary/windows")

@@ -1,17 +1,13 @@
 #pragma once
 
-#include <QJsonValue>
 #include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QByteArray>
 
 #include <osg/Math>
 
 namespace scially {
 
 	/************************************* MATH Utils *****************************************************/
-	constexpr double METERIC = 0.01;
+	constexpr double METERIC_PRECISION = 0.01;
 
 	inline double meterToLat(double m/*, double lat*/) {
 		return osg::RadiansToDegrees(m * 0.000000157891);

@@ -34,6 +34,10 @@ int main(int argc, char** argv){
     parser.addOption(layerOption);
     const QCommandLineOption threadOption("thread", "thread count", "thread", "4");
     parser.addOption(threadOption);
+    const QCommandLineOption minLOD("min-lod", "min LOD", "min-LOD", "10");
+    parser.addOption(minLOD);
+    const QCommandLineOption maxLOD("max-lod", "max LOD", "max-LOD", "18");
+    parser.addOption(maxLOD);
     const QCommandLineOption yUpAxis("yUpAxis", "y up axis", "yUpAxis");
     parser.addOption(yUpAxis);
 
@@ -79,8 +83,10 @@ int main(int argc, char** argv){
         }
         const QString fieldName = parser.value(fieldOption);
         const QString layerName = parser.value(layerOption);
+        const int minLODValue = parser.value(minLOD).toInt();
+        const int maxLODValue = parser.value(maxLOD).toInt();
 
-        scially::ShpConvertJob shpConvert(input, layerName, output, fieldName);
+        scially::ShpConvertJob shpConvert(input, layerName, output, fieldName, minLODValue, maxLODValue);
         shpConvert.run();
     }
     else{
