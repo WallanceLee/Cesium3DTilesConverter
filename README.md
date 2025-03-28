@@ -4,6 +4,9 @@
 # 简介
 
 3DTiles 转换工具集, 快速将OSGB、Shp、GDB等格式转为Cesium 3DTiles。
+感谢原作者 https://github.com/scially/Cesium3DTilesConverter/
+
+这个分支shapefile_new，在原来的基础上优化了基于LOD生成shapefile的3dtiles切片。
 
 这是一个基于c++ 17 和 Qt5.15 项目。
 
