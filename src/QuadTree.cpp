@@ -112,7 +112,7 @@ namespace scially
 
     void QuadTree::generateTileset(BaseTile *tile, const QString& output)
     {
-        tile->asset.assets["version"] = "1.0";
+        tile->asset.assets["version"] = "1.1";
         tile->asset.assets["gltfUpAxis"] = "Z";
         bool first = true;
         double geometricError = 0;
@@ -133,6 +133,7 @@ namespace scially
                 if (first)
                 {
                     region = child.root.boundingVolume.region.value();
+                    first = false;
                 }
                 else
                 {
@@ -206,25 +207,25 @@ namespace scially
                 qWarning() << "Only support Polygon(MultiPolygon)";
             }
         }
-        QByteArray b3dmBuffer = meshes.toB3DM(true);
-        QString b3dmFilePath = QString("%1/Tile_%2_%3_%4.b3dm").
+        QByteArray glbBuffer = meshes.getGlbBuffer();
+        QString glbFilePath = QString("%1/Tile_%2_%3_%4.glb").
                      arg(output).
                      arg(root->getLevel()).
                      arg(root->getRow()).
                      arg(root->getCol());
-        QFile b3dmFile = QFile(b3dmFilePath);
-        if (!b3dmFile.open(QIODevice::WriteOnly))
+        QFile glbFile = QFile(glbFilePath);
+        if (!glbFile.open(QIODevice::WriteOnly))
         {
-            qWarning() << "Can't write file: " << b3dmFile.fileName();
+            qWarning() << "Can't write file: " << glbFile.fileName();
         }
 
-        int writeBytes = b3dmFile.write(b3dmBuffer);
+        int writeBytes = glbFile.write(glbBuffer);
         if (writeBytes <= 0)
         {
-            qWarning() << "Can't write file: " << b3dmFile.fileName();
+            qWarning() << "Can't write file: " << glbFile.fileName();
         }
-        b3dmFile.flush();
-        b3dmFile.close();
+        glbFile.flush();
+        glbFile.close();
 
         tile->boundingVolume = BoundingVolumeRegion::fromCenterXY(
 
@@ -234,7 +235,7 @@ namespace scially
         tile->geometricError = 0;
         tile->transform = Transform::fromXYZ(centerX, centerY, 0);
         tile->content.emplace();
-        tile->content->uri = QString("./Tile_%1_%2_%3.b3dm").
+        tile->content->uri = QString("./Tile_%1_%2_%3.glb").
                      arg(root->getLevel()).
                      arg(root->getRow()).
                      arg(root->getCol());;
@@ -243,7 +244,7 @@ namespace scially
 
     bool QuadTree::generateTileWithChild(QuadTree* tree, BaseTile* tile, const QString &output)
     {
-        tile->asset.assets["version"] = "1.0";
+        tile->asset.assets["version"] = "1.1";
         tile->asset.assets["gltfUpAxis"] = "Z";
         RootTile content;
         bool resultGeoms = false;
