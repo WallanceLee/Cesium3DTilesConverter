@@ -10,6 +10,8 @@
 
 这是一个基于c++ 17 和 Qt5.15 项目。
 
+建议使用vcpkg构建C++依赖，macOS m系列处理器建议使用brew命令安装C++依赖（vcpkg无法成功编译openscenegraph）.
+
 提供了如下的子工具：
 
 - `OSGB(OpenSceneGraph Binary)` 转 `3DTiles`
