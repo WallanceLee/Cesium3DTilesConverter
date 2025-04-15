@@ -158,16 +158,19 @@ namespace scially
                     osg::Image* image = tex->getImage(0);
                     if (image)
                     {
+                        std::stringstream ss;
+
                         width = image->s();
                         height = image->t();
 
                         const GLenum format = image->getPixelFormat();
                         const char* rgb = (const char*)(image->data());
+
                         uint32_t rowStep = image->getRowStepInBytes();
                         uint32_t rowSize = image->getRowSizeInBytes();
                         switch (format)
                         {
-                        case GL_RGBA:
+                        case GL_BGRA:
                             jpegBuffer.resize(width * height * 3);
                             for (int i = 0; i < height; i++)
                             {
@@ -184,7 +187,7 @@ namespace scially
                             {
                                 for (int j = 0; j < rowSize; j++)
                                 {
-                                    jpegBuffer.push_back(*(rgb + rowStep * i + j));
+                                    jpegBuffer.push_back(rgb[rowStep * i + j]);
                                 }
                             }
                             break;
@@ -203,13 +206,13 @@ namespace scially
 
             if (!jpegBuffer.empty())
             {
-                buffer.data.reserve(buffer.size() + width * height * comp);
-                stbi_write_jpg_to_func(stbImgWriteBuffer, &buffer.data, width, height, comp, jpegBuffer.data(), 80);
+                buffer.data.reserve(buffer.size() + width * height * 3);
+                stbi_write_jpg_to_func(stbImgWriteBuffer, &buffer.data, width, height, 3, jpegBuffer.data(), 90);
             }
             else
             {
-                std::vector<unsigned char> vData(256 * 256 * 3);
-                stbi_write_jpg_to_func(stbImgWriteBuffer, &buffer.data, 256, 256, 3, vData.data(), 80);
+                std::vector<unsigned char> vData(256 * 256 * 3, 255);
+                stbi_write_jpg_to_func(stbImgWriteBuffer, &buffer.data, 256, 256, 3, vData.data(), 90);
             }
 
             tinygltf::Image image;
@@ -260,13 +263,19 @@ namespace scially
 
         // use pbr material
         {
-            model.extensionsRequired = {"KHR_materials_unlit"};
-            model.extensionsUsed = {"KHR_materials_unlit"};
+            // model.extensionsRequired = {"KHR_materials_unlit"};
+            // model.extensionsUsed = {"KHR_materials_unlit"};
             for (int i = 0; i < lodVisitor.textureArray.size(); i++)
             {
 
-                tinygltf::Material mat = makeColorMaterialFromRGB(1.0, 1.0, 1.0);
-                mat.b_unlit = true; // use KHR_materials_unlit
+                tinygltf::Material mat;
+                tinygltf::Parameter metallicFactor;
+                metallicFactor.number_value = new double(0);
+                mat.values["metallicFactor"] = metallicFactor;
+                tinygltf::Parameter roughnessFactor;
+                roughnessFactor.number_value = new double(1);
+                mat.values["roughnessFactor"] = roughnessFactor;
+                // mat.b_unlit = true; // use KHR_materials_unlit
                 tinygltf::Parameter baseColorTexture;
                 baseColorTexture.json_int_value = {std::pair<std::string, int>("index", i)};
                 mat.values["baseColorTexture"] = baseColorTexture;
