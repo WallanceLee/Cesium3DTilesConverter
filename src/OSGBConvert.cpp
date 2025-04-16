@@ -170,7 +170,7 @@ namespace scially
                         uint32_t rowSize = image->getRowSizeInBytes();
                         switch (format)
                         {
-                        case GL_BGRA:
+                        case GL_RGBA:
                             jpegBuffer.resize(width * height * 3);
                             for (int i = 0; i < height; i++)
                             {
@@ -179,6 +179,18 @@ namespace scially
                                     jpegBuffer[i * width * 3 + j * 3] = rgb[i * width * 4 + j * 4];
                                     jpegBuffer[i * width * 3 + j * 3 + 1] = rgb[i * width * 4 + j * 4 + 1];
                                     jpegBuffer[i * width * 3 + j * 3 + 2] = rgb[i * width * 4 + j * 4 + 2];
+                                }
+                            }
+                            break;
+                        case GL_BGRA:
+                            jpegBuffer.resize(width * height * 3);
+                            for (int i = 0; i < height; i++)
+                            {
+                                for (int j = 0; j < width; j++)
+                                {
+                                    jpegBuffer[i * width * 3 + j * 3] = rgb[i * width * 4 + j * 4 + 2];
+                                    jpegBuffer[i * width * 3 + j * 3 + 1] = rgb[i * width * 4 + j * 4 + 1];
+                                    jpegBuffer[i * width * 3 + j * 3 + 2] = rgb[i * width * 4 + j * 4];
                                 }
                             }
                             break;
